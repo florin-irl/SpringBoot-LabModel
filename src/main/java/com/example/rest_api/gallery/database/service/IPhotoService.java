@@ -9,4 +9,5 @@ public interface IPhotoService {
     PhotoEntity updatePhotoName(Long photoId, String newName);
     void deletePhoto(Long photoId);
     List<PhotoEntity> getPhotosByAlbum(Long albumId);
+    PhotoEntity findById(Long photoId);
 }

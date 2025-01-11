@@ -1,7 +1,24 @@
-<h1 th:text="${album.name}"></h1>
-<a th:href="@{/photos/upload/{albumId}(albumId=${album.id})}">Upload Photo</a>
-<ul>
-    <li th:each="photo : ${album.photos}">
-        <span th:text="${photo.name}"></span>
-    </li>
-</ul>
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout.html}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title th:text="'Album: ' + ${album.name}"></title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4" th:text="${album.name}"></h1>
+
+    <div>
+        <h2 class="text-2xl font-semibold text-gray-700">Photos</h2>
+        <div class="grid grid-cols-3 gap-4 mt-4">
+            <div th:if="${photos.size() == 0}" class="text-gray-500">No photos available in this album.</div>
+
+            <div th:each="photo : ${photos}">
+                <h3 th:text="${photo.name}"></h3>
+                <img th:src="@{/albums/photos/{photoId}(photoId=${photo.id})}" alt="Photo" class="img-thumbnail">
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

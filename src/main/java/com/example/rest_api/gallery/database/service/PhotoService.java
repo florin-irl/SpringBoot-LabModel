@@ -56,4 +56,9 @@ public class PhotoService implements IPhotoService{
         return photoRepository.findAllByAlbumId(albumId);
     }
 
+    @Override
+    public PhotoEntity findById(Long photoId) {
+        return photoRepository.findById(photoId)
+                .orElseThrow(() -> new IllegalArgumentException("Photo not found!"));
+    }
 }

@@ -10,7 +10,11 @@
 
     <ul>
         <li th:each="album : ${albums}" class="mb-4">
-            <h2 class="text-lg font-semibold" th:text="${album.name}"></h2>
+            <div th:each="album : ${albums}" class="p-4 border rounded shadow">
+                <h2 th:text="${album.name}" class="text-lg font-semibold text-gray-800"></h2>
+                <a th:href="@{'/albums/' + ${album.id}}" class="text-blue-600 hover:underline">View Contents</a>
+            </div>
+
         </li>
     </ul>
 </div>

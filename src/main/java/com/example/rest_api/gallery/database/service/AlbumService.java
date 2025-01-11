@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlbumService {
@@ -99,6 +100,17 @@ public class AlbumService {
 
         roleRepository.save(adminRole);
     }
+
+    public Optional<AlbumEntity> findById(Long albumId) {
+        return albumRepository.findById(albumId);
+    }
+
+    public AlbumEntity findAlbumWithPhotos(Long albumId) {
+        return albumRepository.findByIdWithPhotos(albumId)
+                .orElseThrow(() -> new IllegalArgumentException("Album not found"));
+    }
+
+
 
 
 

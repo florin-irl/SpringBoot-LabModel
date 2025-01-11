@@ -5,8 +5,10 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 @Transactional
 public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
@@ -29,4 +31,8 @@ public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
     @Modifying
     @Query(value = "delete from album where id=:id", nativeQuery = true)
     void deleteAlbumById(Long id);
+
+    @Query("SELECT a FROM AlbumEntity a LEFT JOIN FETCH a.photos WHERE a.id = :albumId")
+    Optional<AlbumEntity> findByIdWithPhotos(@Param("albumId") Long albumId);
+
 }
