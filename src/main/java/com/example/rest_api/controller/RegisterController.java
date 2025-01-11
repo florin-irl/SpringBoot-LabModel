@@ -1,11 +1,11 @@
 package com.example.rest_api.controller;
 
-import com.example.rest_api.database.model.Role;
-import com.example.rest_api.database.model.RoleEntity;
-import com.example.rest_api.database.model.UserEntity;
-import com.example.rest_api.service.RoleService;
-import com.example.rest_api.service.UserService;
-import com.example.rest_api.service.UserValidatorService;
+import com.example.rest_api.users.database.model.Role;
+import com.example.rest_api.users.database.model.RoleEntity;
+import com.example.rest_api.users.database.model.UserEntity;
+import com.example.rest_api.users.database.service.RoleService;
+import com.example.rest_api.users.database.service.UserService;
+import com.example.rest_api.users.database.service.UserValidatorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

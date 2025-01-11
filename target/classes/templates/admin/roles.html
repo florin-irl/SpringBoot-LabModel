@@ -1,53 +1,42 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout.html}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
 <head>
     <title>Role Management</title>
 </head>
 <body>
-<div layout:fragment="content" class="container mx-auto">
-    <!-- Page Header -->
-    <div class="py-6 border-b border-gray-300">
-        <h1 class="text-3xl font-bold text-gray-700">Role Management</h1>
-    </div>
-
-    <!-- Roles Table Section -->
-    <div class="mt-6 bg-white shadow-md rounded-lg p-6">
-        <table class="w-full border-collapse border border-gray-200 rounded-lg">
-            <thead class="bg-indigo-600 text-white">
-            <tr>
-                <th class="px-6 py-3 text-left font-medium text-sm">Role</th>
-                <th class="px-6 py-3 text-left font-medium text-sm">Permissions</th>
-                <th class="px-6 py-3 text-center font-medium text-sm">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="role : ${roles}" class="border-b hover:bg-gray-50">
-                <td class="px-6 py-3" th:text="${role.name}" class="text-gray-800"></td>
-                <td class="px-6 py-3">
-                    <ul class="list-disc list-inside text-gray-600">
-                        <li th:each="permission : ${role.permissions}" th:text="${permission.httpMethod} + ' ' + ${permission.url}" class="text-sm"></li>
-                    </ul>
-                </td>
-                <td class="px-6 py-3 text-center space-x-2">
-                    <!-- Edit Button -->
-                    <form th:action="@{/admin/roles/{id}/edit(id=${role.id})}" method="post" class="inline-block">
-                        <button type="submit"
-                                class="bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded hover:bg-blue-600 focus:ring focus:ring-blue-300 focus:outline-none">
-                            Edit
-                        </button>
-                    </form>
-                    <!-- Delete Button -->
-                    <form th:action="@{/admin/roles/{id}/delete(id=${role.id})}" method="post" class="inline-block">
-                        <button type="submit"
-                                class="bg-red-500 text-white text-sm font-medium px-4 py-2 rounded hover:bg-red-600 focus:ring focus:ring-red-300 focus:outline-none">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Role Management</h1>
+    <table class="w-full border border-gray-200 rounded-lg">
+        <thead class="bg-indigo-600 text-white">
+        <tr>
+            <th class="px-4 py-2 text-left">Role Name</th>
+            <th class="px-4 py-2 text-left">Permissions</th>
+            <th class="px-4 py-2 text-center">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="role : ${roles}" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2" th:text="${role.name}"></td>
+            <td class="px-4 py-2">
+                <ul>
+                    <li th:each="permission : ${role.permissions}"
+                        th:text="${permission.httpMethod} + ' ' + ${permission.url}" class="text-sm"></li>
+                </ul>
+            </td>
+            <td class="px-4 py-2 text-center space-x-2">
+                <form th:action="@{/admin/roles/{roleId}/delete(roleId=${role.id})}" method="post" class="inline-block">
+                    <button type="submit"
+                            class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 focus:outline-none">
+                        Delete
+                    </button>
+                </form>
+                <a th:href="@{/admin/roles/{roleId}/edit(roleId=${role.id})}"
+                   class="text-blue-500 hover:underline">Edit</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

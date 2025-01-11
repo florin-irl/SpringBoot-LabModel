@@ -1,0 +1,7 @@
+<h1 th:text="${album.name}"></h1>
+<a th:href="@{/photos/upload/{albumId}(albumId=${album.id})}">Upload Photo</a>
+<ul>
+    <li th:each="photo : ${album.photos}">
+        <span th:text="${photo.name}"></span>
+    </li>
+</ul>

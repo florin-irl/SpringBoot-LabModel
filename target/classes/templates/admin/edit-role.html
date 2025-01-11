@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout.html}"
+      xmlns:layout="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Edit Role</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Edit Role: <span th:text="${role.name}"></span></h1>
+
+    <form th:action="@{/admin/roles/{roleId}/edit(roleId=${role.id})}" method="post">
+        <div>
+            <!-- Existing Permissions -->
+            <div th:each="permission : ${role.permissions}" class="flex items-center space-x-4 mt-2">
+                <span th:text="${permission.httpMethod} + ' ' + ${permission.url}" class="text-gray-700"></span>
+                <button type="submit" name="deletePermissionIds" th:value="${permission.id}"
+                        class="text-red-500 hover:underline">Delete</button>
+            </div>
+        </div>
+
+        <!-- Add New Permission -->
+        <h2 class="text-lg font-semibold text-gray-800 mt-4">Add New Permission</h2>
+        <div class="flex items-center space-x-4 mt-2">
+            <select name="newHttpMethod" class="border rounded px-2 py-1">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="DELETE">DELETE</option>
+            </select>
+            <input type="text" name="newUrl" placeholder="/api/example" class="border rounded px-2 py-1 flex-1">
+        </div>
+
+        <button type="submit" class="mt-4 bg-indigo-600 text-white py-2 px-4 rounded hover:bg-indigo-700">
+            Save Changes
+        </button>
+    </form>
+</div>
+</body>
+</html>

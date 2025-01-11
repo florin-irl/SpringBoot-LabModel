@@ -1,0 +1,6 @@
+<h1>Your Albums</h1>
+<ul>
+    <li th:each="album : ${albums}">
+        <a th:href="@{/albums/{id}(id=${album.id})}" th:text="${album.name}"></a>
+    </li>
+</ul>

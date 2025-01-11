@@ -1,46 +1,37 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout.html}">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout.html}">
 <head>
     <title>User Management</title>
 </head>
 <body>
-<div layout:fragment="content" class="container mx-auto">
-    <!-- Page Header -->
-    <div class="py-6 border-b border-gray-300">
-        <h1 class="text-3xl font-bold text-gray-700">User Management</h1>
-    </div>
-
-    <!-- User Table Section -->
-    <div class="mt-6 bg-white shadow-md rounded-lg p-6">
-        <table class="w-full border-collapse border border-gray-200 rounded-lg">
-            <thead class="bg-indigo-600 text-white">
-            <tr>
-                <th class="px-6 py-3 text-left font-medium text-sm">Email</th>
-                <th class="px-6 py-3 text-left font-medium text-sm">Roles</th>
-                <th class="px-6 py-3 text-center font-medium text-sm">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}" class="border-b hover:bg-gray-50">
-                <td class="px-6 py-3 text-gray-800" th:text="${user.email}"></td>
-                <td class="px-6 py-3">
-                    <ul class="list-disc list-inside text-gray-600">
-                        <li th:each="role : ${user.roles}" th:text="${role.name}" class="text-sm"></li>
-                    </ul>
-                </td>
-                <td class="px-6 py-3 text-center space-x-2">
-                    <!-- Update Roles Button -->
-                    <form th:action="@{/admin/users/{id}/roles(id=${user.id})}" method="post" class="inline-block">
-                        <button type="submit"
-                                class="bg-blue-500 text-white text-sm font-medium px-4 py-2 rounded hover:bg-blue-600 focus:ring focus:ring-blue-300 focus:outline-none">
-                            Update Roles
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">User Management</h1>
+    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead>
+        <tr class="bg-indigo-600 text-white">
+            <th class="px-4 py-2 text-left">Username</th>
+            <th class="px-4 py-2 text-left">Email</th>
+            <th class="px-4 py-2 text-left">Roles</th>
+            <th class="px-4 py-2 text-center">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${users}" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2" th:text="${user.username}"></td>
+            <td class="px-4 py-2" th:text="${user.email}"></td>
+            <td class="px-4 py-2">
+                <ul>
+                    <li th:each="role : ${user.roles}" th:text="${role.name}" class="text-sm"></li>
+                </ul>
+            </td>
+            <td class="px-4 py-2 text-center">
+                <a th:href="@{/admin/users/{userId}/roles(userId=${user.id})}" class="text-blue-600 hover:underline">
+                    Update Roles
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 </body>
 </html>

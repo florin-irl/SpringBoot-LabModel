@@ -1,12 +1,12 @@
 package com.example.rest_api;
 
-import com.example.rest_api.database.model.PermissionEntity;
-import com.example.rest_api.database.model.Role;
-import com.example.rest_api.database.model.RoleEntity;
-import com.example.rest_api.database.model.UserEntity;
-import com.example.rest_api.service.PermissionService;
-import com.example.rest_api.service.RoleService;
-import com.example.rest_api.service.UserService;
+import com.example.rest_api.users.database.model.PermissionEntity;
+import com.example.rest_api.users.database.model.Role;
+import com.example.rest_api.users.database.model.RoleEntity;
+import com.example.rest_api.users.database.model.UserEntity;
+import com.example.rest_api.users.database.service.PermissionService;
+import com.example.rest_api.users.database.service.RoleService;
+import com.example.rest_api.users.database.service.UserService;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class DataInitializer implements ApplicationRunner {
 
         Boolean isRoleAdminInDb = roleService.existsByName(admin.getName());
         if(!isRoleAdminInDb) {
-            roleService.save(admin);
+            admin = roleService.save(admin);
             for (String crudMethod : CRUD_METHODS) {
                 PermissionEntity permissionEntity = new PermissionEntity();
                 permissionEntity.setHttpMethod(crudMethod);
@@ -49,6 +49,10 @@ public class DataInitializer implements ApplicationRunner {
                 permissionEntity.setRole(admin);
                 permissionService.save(permissionEntity);
             }
+        }
+        else
+        {
+            admin = roleService.findByName(Role.ADMIN.name()).get();
         }
 
         Boolean isRoleUserInDb = roleService.existsByName(user.getName());

@@ -1,41 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" layout:decorate="~{layout.html}">
 <head>
-    <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
 </head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-<div class="bg-white shadow-lg rounded-lg p-8 max-w-md w-full">
-    <!-- Welcome Message -->
-    <h1 class="text-2xl font-bold text-gray-800 text-center">
-        Welcome, <span th:text="${username}">User</span>!
-    </h1>
-    <h2 class="text-lg text-gray-600 text-center mt-2">Home - SUCCESS</h2>
-
-    <!-- User Info Table -->
-    <div class="mt-6">
-        <table class="w-full border-collapse border border-gray-200 rounded-lg">
-            <thead class="bg-indigo-600 text-white">
-            <tr>
-                <th class="px-4 py-2 text-left font-medium">User Info</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr class="border-b hover:bg-gray-50">
-                <td class="px-4 py-2 text-gray-800" th:text="${username}">Authenticated User</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Logout Button -->
-    <div class="mt-6 text-center">
-        <a href="/logout"
-           class="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 focus:ring-2 focus:ring-red-300 focus:outline-none">
-            Logout
-        </a>
-    </div>
+<body>
+<div layout:fragment="content">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Welcome, <span th:text="${username}">User</span>!</h1>
+    <ul class="space-y-2">
+        <li>
+            <a th:href="@{/albums}" class="text-indigo-600 hover:underline">View Albums</a>
+        </li>
+        <li>
+            <a th:href="@{/albums/create}" class="text-indigo-600 hover:underline">Create Album</a>
+        </li>
+    </ul>
 </div>
 </body>
 </html>
