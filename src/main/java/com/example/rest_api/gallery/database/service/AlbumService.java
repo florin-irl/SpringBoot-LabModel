@@ -1,62 +1,105 @@
 package com.example.rest_api.gallery.database.service;
 
 import com.example.rest_api.gallery.database.model.AlbumEntity;
+import com.example.rest_api.gallery.database.model.PhotoEntity;
 import com.example.rest_api.gallery.database.repository.AlbumRepository;
+import com.example.rest_api.gallery.database.repository.PhotoRepository;
+import com.example.rest_api.users.database.model.PermissionEntity;
+import com.example.rest_api.users.database.model.RoleEntity;
+import com.example.rest_api.users.database.repository.RoleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class AlbumService implements IAlbumService{
+public class AlbumService {
 
     private final AlbumRepository albumRepository;
+    private final PhotoRepository photoRepository;
+    private final RoleRepository roleRepository;
 
     @Autowired
-    public AlbumService(AlbumRepository albumRepository) {
+    public AlbumService(AlbumRepository albumRepository, PhotoRepository photoRepository, RoleRepository roleRepository) {
         this.albumRepository = albumRepository;
+        this.photoRepository = photoRepository;
+        this.roleRepository = roleRepository;
     }
 
-    @Override
-    @Transactional
-    public AlbumEntity createAlbum(String name,
-                                   String createdBy){
-        if(albumRepository.existsByName(name)){
-            throw new IllegalArgumentException("Album with name " + name + " already exists");
-        }
+    public List<AlbumEntity> findAll() {
+        return albumRepository.findAll();
+    }
 
+    public void createAlbum(String albumName, List<MultipartFile> photos, String createdBy) {
+        // Create and save the album
         AlbumEntity album = new AlbumEntity();
-        album.setName(name);
-        album.setCreatedBy(createdBy);
+        album.setName(albumName);
+        album.setCreatedBy(createdBy); // Assuming your AlbumEntity has a `createdBy` field
+        album = albumRepository.save(album);
 
-        return albumRepository.save(album);
-    }
-
-    @Override
-    @Transactional
-    public AlbumEntity updateAlbumName(Long albumId, String newName) {
-        AlbumEntity album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new IllegalArgumentException("Album not found!"));
-        album.setName(newName);
-        return albumRepository.save(album);
-    }
-
-    @Override
-    @Transactional
-    public void deleteAlbum(Long albumId){
-        if(!albumRepository.existsById(albumId)){
-            throw new IllegalArgumentException("Album not found!");
+        // Save photos
+        List<PhotoEntity> photoEntities = new ArrayList<>();
+        for (MultipartFile photo : photos) {
+            try {
+                PhotoEntity photoEntity = new PhotoEntity();
+                photoEntity.setName(photo.getOriginalFilename());
+                photoEntity.setContent(photo.getBytes());
+                photoEntity.setAlbum(album);
+                photoEntities.add(photoEntity);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to process photo", e);
+            }
         }
-        albumRepository.deleteById(albumId);
+        photoRepository.saveAll(photoEntities);
+
+        // Create roles and permissions
+        createAlbumRoles(albumName);
     }
 
-    @Override
-    public java.util.List<AlbumEntity> getAlbumsByUser(String createdBy){
-        return albumRepository.findAllByCreatedBy(createdBy);
+    private void createAlbumRoles(String albumName) {
+        String basePath = "/album/" + albumName.toLowerCase() + "/**";
+
+        // Create CARS_ALBUM role
+        RoleEntity role = new RoleEntity();
+        role.setName(albumName.toUpperCase() + "_ALBUM");
+
+        PermissionEntity permission = new PermissionEntity();
+        permission.setHttpMethod("GET");
+        permission.setUrl(basePath);
+        permission.setRole(role);
+
+        role.setPermissions(List.of(permission));
+        roleRepository.save(role);
+
+        // Create CARS_ALBUM_ADMIN role
+        RoleEntity adminRole = new RoleEntity();
+        adminRole.setName(albumName.toUpperCase() + "_ALBUM_ADMIN");
+
+        PermissionEntity getPermission = new PermissionEntity();
+        getPermission.setHttpMethod("GET");
+        getPermission.setUrl(basePath);
+        getPermission.setRole(adminRole);
+
+        PermissionEntity postPermission = new PermissionEntity();
+        postPermission.setHttpMethod("POST");
+        postPermission.setUrl(basePath);
+        postPermission.setRole(adminRole);
+
+        PermissionEntity deletePermission = new PermissionEntity();
+        deletePermission.setHttpMethod("DELETE");
+        deletePermission.setUrl(basePath);
+        deletePermission.setRole(adminRole);
+
+        List<PermissionEntity> adminPermissions = List.of(getPermission, postPermission, deletePermission);
+        adminRole.setPermissions(adminPermissions);
+
+        roleRepository.save(adminRole);
     }
 
-    @Override
-    public AlbumEntity getAlbumById(Long albumId){
-        return albumRepository.findById(albumId)
-                .orElseThrow(() -> new IllegalArgumentException("Album not found!"));
-    }
+
+
 }

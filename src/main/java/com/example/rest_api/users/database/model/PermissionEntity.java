@@ -9,6 +9,8 @@ import lombok.Setter;
 @Getter @Setter @EqualsAndHashCode
 @Table(name = "permissions")
 public class PermissionEntity {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
